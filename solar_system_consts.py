@@ -8,7 +8,6 @@ def turn(t, n, T_act):
     phi = 2 * np.pi * turns
     return phi
 
-
 # Consts:
 G = 6.6743  # 10**(-11) m^3/(kg*c^2)
 name = ['Sun', 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto']
@@ -36,7 +35,7 @@ for i in range(9):
 
     max_cntr += (mass[i+1] * radius[i+1]) / np.sum(mass)
 
-
+"""
 print(name)
 print("10**24 kg=  ", mass)
 print("mass of Earth=   ", mass_)
@@ -47,13 +46,13 @@ print(name[1:])
 print("power:  ", power)
 print("min_cntr = ", min_cntr, "max_cntr = ", max_cntr)
 print("power in earth power: ", power_)
-
+"""
 
 # characteristic dependence current sunspots (that we see) in max.activity(depend only on Sun)
 # at configuration between Earth and Jupiter
 number_turn = [0]*100
 activity = [0]*100
-num = [0]*100   # numer of cycle (11 years)
+num = [0]*100   # number of cycle (11 years)
 for j in range(100):
     num[j] = j
     number_turn[j] = (j*11)/(11.86/10.86)
@@ -62,53 +61,82 @@ for j in range(100):
         number_turn[j] = 100 - number_turn[j]
     activity[j] = 50 - number_turn[j]
 
-
 #plt.plot(num, number_turn, '.')
-plt.plot(num, activity, 'o')
-plt.show()
+#plt.plot(num, activity, 'o')
+#plt.show()
 
 # more accuracy
 sun_act = 15    # some constant that characterize current of sunspots in maximum of solar activity
 T_act = 11.03   # period of solar activity, time change of main dipolar magnetic field
-n = 30  # current T_act
+n = 31  # current T_act
 # angle of turn planet around Earth (in the beginning all angle = 0)
 turn_mercury = [0]*n
 turn_venus = [0]*n
 turn_jupiter = [0]*n
 turn_saturn = [0]*n
-activity = [0]*n    # current of sunspots
-year = [0]*n    # our year
+activity_max = [0]*n   # current of sunspots
+activity_min = [0]*n
+year_max = [0]*n    # our year
+year_min = [0]*n
 step = 90   # for change phase in the beginning
-for j in range(-20, 10):
-    turn_mercury[j] = turn(t[1], j+step, T_act)
-    turn_venus[j] = turn(t[2], j + step, T_act)
-    turn_jupiter[j] = turn(t[5], j + step, T_act)
-    turn_saturn[j] = turn(t[6], j+step, T_act)
-    activity[j] = (sun_act + 1 + 11.73*np.cos(turn_jupiter[j]) + 0.36*np.cos(turn_mercury[j])
-                   + 1.56 * np.cos(turn_venus[j]) + 1.04*np.cos(turn_saturn[j])) * 260/25
-    year[j] = 1960 + T_act*j
+for j in range(-20, 11):#-20;10 for maximums -15 11
+    turn_mercury[j+20] = turn(t[1], j+step, T_act)
+    turn_venus[j+20] = turn(t[2], j + step, T_act)
+    turn_jupiter[j+20] = turn(t[5], j + step, T_act)
+    turn_saturn[j+20] = turn(t[6], j+step, T_act)
+
+    activity_max[j+20] = (sun_act + 1 + 11.73*np.cos(turn_jupiter[j+20]) + 0.37*np.cos(turn_mercury[j+20])#for maximums
+                + 1.56 * np.cos(turn_venus[j+20]) + 1.04*np.cos(turn_saturn[j+20])) * 260/25
+    year_max[j+20] = 1960 + T_act*j #counting of year from maximum in 1960
+
+    activity_min[j+20] = (sun_act/2 + 1 - 11.73*np.cos(turn_jupiter[j+20]) - 0.37*np.cos(turn_mercury[j+20])
+                - 1.56 * np.cos(turn_venus[j+20]) + 1.04*np.cos(turn_saturn[j+20]))
+    year_min[j+20] = 1913 + T_act*j #counting of year from minimum in 1954
 
 # graph data and our calculation
 X = []
 Y = []
-with open('SN_ms_tot_V2.0.csv', 'r') as datafile:
+with open('Solar_activity/SN_ms_tot_V2.0.csv', 'r') as datafile:
     plotting = csv.reader(datafile, delimiter=';')
 
     for ROWS in plotting:
         X.append(float(ROWS[2]))
         Y.append(float(ROWS[3]))
 
+print(Y)
 plt.plot(X, Y)
 plt.title('Sunspots')
 plt.xlabel('year')
 plt.ylabel('current')
-plt.plot(year, activity, 'o')
+plt.legend(loc = 'best', fontsize = 10)
+plt.plot(year_min[5:], activity_min[5:], 'vr', label = 'minimums')
+plt.plot(year_max[:27], activity_max[:27], 'o', label = 'maximums')
 plt.show()
 
+#####
 
+Dalton_X = []
+Dalton_Y = []
 
+Current_X = []
+Current_Y = []
 
+X_y = []
+Y_y = []
+with open('Solar_activity/SN_year_tot_V2.0.csv', 'r') as datafile:
+    plotting = csv.reader(datafile, delimiter=';')
 
+    for ROWS in plotting:
+        X_y.append(float(ROWS[0]))
+        Y_y.append(float(ROWS[1]))
 
-
+"""
+plt.plot(Dalton_X, Dalton_Y, label = 'dalton')
+plt.plot(Current_X, Current_Y, label = 'nowadays')
+plt.legend(loc = 'best', fontsize = 10)
+plt.title('Sliced Dalron period vs Nowadays')
+plt.xlabel('year')
+plt.ylabel('sunspots number')
+plt.show()
+"""
 
