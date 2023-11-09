@@ -121,16 +121,17 @@ Dalton_Y = []
 Current_X = []
 Current_Y = []
 
-X_y = []
-Y_y = []
 with open('Solar_activity/SN_year_tot_V2.0.csv', 'r') as datafile:
     plotting = csv.reader(datafile, delimiter=';')
 
     for ROWS in plotting:
-        X_y.append(float(ROWS[0]))
-        Y_y.append(float(ROWS[1]))
+        if float(ROWS[0]) >= 1790 and float(ROWS[0]) <= 1830:
+            Dalton_X.append(float(ROWS[0]))
+            Dalton_Y.append(float(ROWS[1]))
+        elif float(ROWS[0]) >= 2000 and float(ROWS[0]) <= 2023:
+            Current_X.append(float(ROWS[0]) - 210)
+            Current_Y.append(float(ROWS[1]))
 
-"""
 plt.plot(Dalton_X, Dalton_Y, label = 'dalton')
 plt.plot(Current_X, Current_Y, label = 'nowadays')
 plt.legend(loc = 'best', fontsize = 10)
@@ -138,5 +139,4 @@ plt.title('Sliced Dalron period vs Nowadays')
 plt.xlabel('year')
 plt.ylabel('sunspots number')
 plt.show()
-"""
 
