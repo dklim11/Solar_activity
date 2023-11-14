@@ -96,14 +96,13 @@ for j in range(-20, 11):#-20;10 for maximums -15 11
 # graph data and our calculation
 X = []
 Y = []
-with open('SN_ms_tot_V2.0.csv', 'r') as datafile:
+with open('Solar_activity/SN_ms_tot_V2.0.csv', 'r') as datafile:
     plotting = csv.reader(datafile, delimiter=';')
 
     for ROWS in plotting:
         X.append(float(ROWS[2]))
         Y.append(float(ROWS[3]))
 
-print(Y)
 plt.plot(X, Y)
 plt.title('Sunspots', fontsize=20)
 plt.xlabel('year', fontsize=20)
@@ -122,23 +121,39 @@ Dalton_Y = []
 Current_X = []
 Current_Y = []
 
-with open('SN_year_tot_V2.0.csv', 'r') as datafile:
+with open('Solar_activity/SN_year_tot_V2.0.csv', 'r') as datafile:
     plotting = csv.reader(datafile, delimiter=';')
 
     for ROWS in plotting:
-        if float(ROWS[0]) >= 1770 and float(ROWS[0]) <= 1830:
+        if float(ROWS[0]) >= 1768 and float(ROWS[0]) <= 1811:
             Dalton_X.append(float(ROWS[0]))
             Dalton_Y.append(float(ROWS[1]))
         elif float(ROWS[0]) >= 1980 and float(ROWS[0]) <= 2023:
-            Current_X.append(float(ROWS[0]) - 210)
+            Current_X.append(float(ROWS[0]) - 212)
             Current_Y.append(float(ROWS[1]))
 
 plt.plot(Dalton_X, Dalton_Y, label = 'dalton')
 plt.plot(Current_X, Current_Y, label = 'nowadays')
-plt.title('Sliced Dalron period vs Nowadays', fontsize = 20)
+plt.title('Sliced Dalton period vs Nowadays', fontsize = 20)
 plt.xlabel('year', fontsize = 20)
 plt.ylabel('sunspots number', fontsize = 20)
 plt.tick_params(axis='both', which='major', labelsize=20)
 plt.legend(loc = 'best', fontsize = 20)
 plt.show()
 
+#Covariance evaluation
+sigma_1 = 0
+sigma_2 = 0
+cov = 0
+l = len(Dalton_Y)
+mean_1 = sum(Dalton_Y)/l
+mean_2 = sum(Current_Y)/l
+
+for i in range(l):
+    cov += (Dalton_Y[i]-mean_1)*(Current_Y[i]-mean_2)
+    sigma_1 += (Dalton_Y[i] - mean_1)**2
+    sigma_2 += (Current_Y[i] - mean_2)**2
+
+sigma_1 = np.sqrt(sigma_1)
+sigma_2 = np.sqrt(sigma_2)
+print(cov/(sigma_1*sigma_2))
