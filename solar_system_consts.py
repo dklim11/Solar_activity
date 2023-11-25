@@ -34,7 +34,6 @@ for i in range(9):
         min_cntr += (mass[i + 1] * radius[i + 1]) / np.sum(mass)
 
     max_cntr += (mass[i+1] * radius[i+1]) / np.sum(mass)
-
 """
 print(name)
 print("10**24 kg=  ", mass)
@@ -48,22 +47,6 @@ print("min_cntr = ", min_cntr, "max_cntr = ", max_cntr)
 print("power in earth power: ", power_)
 """
 
-# characteristic dependence current sunspots (that we see) in max.activity(depend only on Sun)
-# at configuration between Earth and Jupiter
-number_turn = [0]*100
-activity = [0]*100
-num = [0]*100   # number of cycle (11 years)
-for j in range(100):
-    num[j] = j
-    number_turn[j] = (j*11)/(11.86/10.86)
-    number_turn[j] = int(number_turn[j]*100) % 100
-    if number_turn[j] >= 50:
-        number_turn[j] = 100 - number_turn[j]
-    activity[j] = 50 - number_turn[j]
-
-#plt.plot(num, number_turn, '.')
-#plt.plot(num, activity, 'o')
-#plt.show()
 
 # more accuracy
 sun_act = 15    # some constant that characterize current of sunspots in maximum of solar activity
